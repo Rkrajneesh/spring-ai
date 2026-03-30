@@ -12,7 +12,6 @@ import java.util.List;
 @Service
 public class ChatService {
     private final ChatClient chatClient;
-    private Prompt prompt;
 
     public ChatService(ChatClient chatClient) {
         this.chatClient = chatClient;
