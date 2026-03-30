@@ -31,3 +31,26 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Compiled class files
+*.class
+
+# Log files
+*.log
+
+# Maven wrapper (optional to ignore, but removes 'mvnw' files)
+.mvn/
+mvnw
+mvnw.cmd
+
+# IDE specific files (IntelliJ, Eclipse, VS Code)
+.idea/
+
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Sensitive Data (VERY IMPORTANT)
+application.properties
+.env
