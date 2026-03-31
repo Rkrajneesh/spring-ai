@@ -1,5 +1,6 @@
 package com.org.ai.service;
 
+import com.org.ai.tool.WeatherTools;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
@@ -10,6 +11,8 @@ import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,6 +21,9 @@ public class ChatService {
     private final ChatClient chatClient;
     @Autowired
     private ChatMemory chatMemory;
+
+    @Autowired
+    private WeatherTools weatherTools;
 
     public ChatService(ChatClient chatClient) {
         this.chatClient = chatClient;
@@ -38,8 +44,9 @@ public class ChatService {
     }
 
     public String chat(String conversationId, String message) {
+        String today = LocalDate.now().format(DateTimeFormatter.ISO_DATE);
         String convId = (conversationId == null || conversationId.isBlank()) ? UUID.randomUUID().toString() : conversationId;
         Prompt prompt = new Prompt(List.of(new SystemMessage("You are friendly travel guide, Always suggest 3 attractions and 1 food items.")));
-        return chatClient.prompt(prompt).advisors(MessageChatMemoryAdvisor.builder(chatMemory).conversationId(convId).build()).user(message).call().content();
+        return chatClient.prompt(prompt).advisors(MessageChatMemoryAdvisor.builder(chatMemory).conversationId(convId).build()) .tools(weatherTools).user(message).call().content();
     }
 }
