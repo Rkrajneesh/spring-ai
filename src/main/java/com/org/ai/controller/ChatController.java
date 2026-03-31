@@ -18,9 +18,14 @@ public class ChatController {
         this.chatService = chatService;
     }
 
-    @PostMapping("/chat")
+//    @PostMapping("/chat")
     public String chatMessage(@RequestBody ChatRequest request) {
         return chatService.chatMessage(request.getMessage());
+    }
+
+    @PostMapping("/chat")
+    public String chat(@RequestBody ChatRequest request) {
+        return chatService.chat(request.getConversationId(),request.getMessage());
     }
 
 }

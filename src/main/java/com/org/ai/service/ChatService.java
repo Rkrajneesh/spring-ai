@@ -1,23 +1,29 @@
 package com.org.ai.service;
 
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
+import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.prompt.Prompt;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ChatService {
     private final ChatClient chatClient;
+    @Autowired
+    private ChatMemory chatMemory;
 
     public ChatService(ChatClient chatClient) {
         this.chatClient = chatClient;
     }
 
-    public String chatMessage(String message){
+    public String chatMessage(String message) {
 //        1. Simpler
 //    return chatClient.prompt().user(message).call().content();
 
@@ -29,5 +35,11 @@ public class ChatService {
                 new UserMessage("Plan my day in Rome."),
                 new AssistantMessage("Morning: Visit the Collosseum\\nAfternoon: Explore the Vatican Museum\\nEvening: See the Trevi Fountain. \\nFood: gelato.")));
         return chatClient.prompt(prompt).user(message).call().content();
+    }
+
+    public String chat(String conversationId, String message) {
+        String convId = (conversationId == null || conversationId.isBlank()) ? UUID.randomUUID().toString() : conversationId;
+        Prompt prompt = new Prompt(List.of(new SystemMessage("You are friendly travel guide, Always suggest 3 attractions and 1 food items.")));
+        return chatClient.prompt(prompt).advisors(MessageChatMemoryAdvisor.builder(chatMemory).conversationId(convId).build()).user(message).call().content();
     }
 }
