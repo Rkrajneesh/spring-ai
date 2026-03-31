@@ -1,5 +1,6 @@
 package com.org.ai.controller;
 
+import com.org.ai.model.TravelPlan;
 import com.org.ai.service.TravelGuideService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +16,7 @@ class TravelGuideController {
         this.travelGuideService = travelGuideService;
     }
     @GetMapping("/travel-guide")
-    public String prepareTravelGuide(@RequestParam String city, @RequestParam Integer days) {
+    public TravelPlan prepareTravelGuide(@RequestParam String city, @RequestParam Integer days) {
         return travelGuideService.travelGuideChat(city,days);
     }
 }
