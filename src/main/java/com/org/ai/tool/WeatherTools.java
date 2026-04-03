@@ -22,12 +22,10 @@ public class WeatherTools {
         try {
             // Build API URL
             String url = "http://api.weatherapi.com/v1/forecast.json?key="+apiKey+"&q="+city+"&days="+date+"&aqi=no&alerts=no";
-
             ForecastResponse apiResponse = restTemplate.getForObject(url, ForecastResponse.class);
             if (apiResponse == null) {
                 return new WeatherResult(city, date, "N/A", "No data");
             }
-
             // Extract forecast
             ForecastResponse.ForecastDay forecastDay = apiResponse.getForecast().getForecastday().get(0);
 
